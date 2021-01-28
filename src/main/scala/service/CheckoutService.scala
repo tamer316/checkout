@@ -3,18 +3,16 @@ package service
 import java.text.NumberFormat
 import java.util.Locale
 
-class CheckoutService(productService: ProductService) {
+class CheckoutService(productService: ProductService, offersService: OffersService) {
   private val formatter: NumberFormat = NumberFormat.getCurrencyInstance(Locale.UK)
 
   def getTotalCost(productNames: Seq[String]): String = {
-    val products = productNames map(productService.findProduct)
+    val products = productNames map productService.findProduct
 
     val total = products.map(_.price).sum
 
-    formatter.format(total)
-  }
-}
+    val discount = offersService.getDiscount(products)
 
-object CheckoutService {
-  def apply(): CheckoutService = new CheckoutService(ProductService)
+    formatter.format(total - discount)
+  }
 }

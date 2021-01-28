@@ -1,9 +1,9 @@
 package app
 
-import service.CheckoutService
+import service.{CheckoutService, OffersService, ProductService}
 
 object Main {
-  val checkoutService = CheckoutService()
+  val checkoutService = new CheckoutService(ProductService, OffersService)
 
   def main(args: Array[String]) = {
     println(checkoutService.getTotalCost(Seq("Apple", "Apple", "Orange", "Apple")))
